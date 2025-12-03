@@ -12,15 +12,15 @@ export default function ChatMessage({ message }: ChatMessageProps) {
     if (message.isTyping) {
         return (
             <div className="flex items-start gap-3 mb-4 animate-fade-in">
-                <div className="w-8 h-8 rounded-full bg-shield-blue flex items-center justify-center text-white text-sm font-medium flex-shrink-0">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium flex-shrink-0" style={{ backgroundColor: 'var(--color-shield-blue)' }}>
                     AI
                 </div>
                 <div className="flex-1 max-w-[80%]">
-                    <div className="bg-surface border border-border rounded-2xl rounded-tl-sm px-4 py-3">
+                    <div className="rounded-2xl rounded-tl-sm px-4 py-3" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
                         <div className="flex gap-1">
-                            <span className="w-2 h-2 bg-shield-blue rounded-full animate-pulse"></span>
-                            <span className="w-2 h-2 bg-shield-blue rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></span>
-                            <span className="w-2 h-2 bg-shield-blue rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></span>
+                            <span className="w-2 h-2 rounded-full animate-pulse-custom" style={{ backgroundColor: 'var(--color-shield-blue)' }}></span>
+                            <span className="w-2 h-2 rounded-full animate-pulse-custom" style={{ backgroundColor: 'var(--color-shield-blue)', animationDelay: '0.2s' }}></span>
+                            <span className="w-2 h-2 rounded-full animate-pulse-custom" style={{ backgroundColor: 'var(--color-shield-blue)', animationDelay: '0.4s' }}></span>
                         </div>
                     </div>
                 </div>
@@ -30,22 +30,34 @@ export default function ChatMessage({ message }: ChatMessageProps) {
 
     return (
         <div className={`flex items-start gap-3 mb-4 animate-slide-up ${isUser ? 'flex-row-reverse' : ''}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium flex-shrink-0 ${isUser ? 'bg-gradient-to-br from-shield-blue-light to-shield-blue-dark' : 'bg-shield-blue'
-                }`}>
+            <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium flex-shrink-0"
+                style={isUser
+                    ? { background: 'linear-gradient(135deg, var(--color-shield-blue-light) 0%, var(--color-shield-blue-dark) 100%)' }
+                    : { backgroundColor: 'var(--color-shield-blue)' }
+                }
+            >
                 {isUser ? 'You' : 'AI'}
             </div>
 
             <div className={`flex-1 ${isUser ? 'max-w-[80%] ml-auto' : 'max-w-[80%]'}`}>
-                <div className={`rounded-2xl px-4 py-3 ${isUser
-                        ? 'bg-shield-blue text-white rounded-tr-sm'
-                        : 'bg-surface border border-border rounded-tl-sm'
-                    }`}>
+                <div
+                    className={`rounded-2xl px-4 py-3 ${isUser ? 'rounded-tr-sm' : 'rounded-tl-sm'}`}
+                    style={isUser
+                        ? { backgroundColor: 'var(--color-shield-blue)', color: 'white' }
+                        : { backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }
+                    }
+                >
                     <p className="text-sm leading-relaxed whitespace-pre-wrap">
                         {message.content}
                     </p>
 
                     {message.tokenData && (
-                        <div className="mt-3 p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20">
+                        <div className="mt-3 p-3 rounded-xl" style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(4px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)'
+                        }}>
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="text-2xl">{message.tokenData.logoUrl || '🪙'}</span>
                                 <div>
@@ -60,7 +72,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
                     )}
                 </div>
 
-                <div className={`text-xs text-[var(--text-tertiary)] mt-1 px-1 ${isUser ? 'text-right' : ''}`}>
+                <div className={`text-xs mt-1 px-1 ${isUser ? 'text-right' : ''}`} style={{ color: 'var(--color-text-tertiary)' }}>
                     {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </div>
             </div>

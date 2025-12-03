@@ -1,65 +1,188 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useRef, useEffect } from 'react';
+import ChatMessage from '@/components/ChatMessage';
+import ChatInput from '@/components/ChatInput';
+import TokenCard from '@/components/TokenCard';
+import MobileFooter from '@/components/MobileFooter';
+import { mockTokens, mockChatMessages } from '@/lib/mockData';
+import { ChatMessage as ChatMessageType } from '@/types';
 
 export default function Home() {
+  const [messages, setMessages] = useState<ChatMessageType[]>(mockChatMessages);
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showTokens, setShowTokens] = useState(false);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping]);
+
+  const handleSendMessage = (content: string) => {
+    // Add user message
+    const userMessage: ChatMessageType = {
+      id: Date.now().toString(),
+      role: 'user',
+      content,
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, userMessage]);
+
+    // Simulate AI typing
+    setIsTyping(true);
+    setTimeout(() => {
+      const aiMessage: ChatMessageType = {
+        id: (Date.now() + 1).toString(),
+        role: 'agent',
+        content: "I'm here to help! I'll guide you through creating a charity token. What's the cause you'd like to support?",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+      setIsTyping(false);
+    }, 2000);
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: 'var(--color-background)' }}>
+      {/* Desktop Sidebar - Tokens */}
+      <aside className="hidden lg:flex lg:w-80 xl:w-96 flex-col" style={{ backgroundColor: 'var(--color-surface)', borderRight: `1px solid var(--color-border)` }}>
+        <div className="p-6" style={{ borderBottom: `1px solid var(--color-border)` }}>
+          <h2 className="text-lg font-semibold mb-1" style={{ color: 'var(--color-text-primary)' }}>
+            Your Tokens
+          </h2>
+          <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+            {mockTokens.length} active tokens
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {mockTokens.map((token) => (
+            <TokenCard key={token.id} token={token} />
+          ))}
+
+          {mockTokens.length === 0 && (
+            <div className="flex flex-col items-center justify-center h-full text-center px-6">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ backgroundColor: 'rgba(0, 102, 255, 0.1)' }}>
+                <svg className="w-8 h-8" style={{ color: 'var(--color-shield-blue)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                No tokens yet. Start chatting to create your first charity token!
+              </p>
+            </div>
+          )}
+        </div>
+      </aside>
+
+      {/* Main Chat Area */}
+      <main className="flex-1 flex flex-col h-screen">
+        {/* Header */}
+        <header className="px-4 py-4 md:px-6" style={{ backgroundColor: 'var(--color-surface)', borderBottom: `1px solid var(--color-border)` }}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-lg" style={{ background: 'linear-gradient(135deg, var(--color-shield-blue-light) 0%, var(--color-shield-blue-dark) 100%)' }}>
+                S
+              </div>
+              <div>
+                <h1 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  Shield Token Bot
+                </h1>
+                <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                  AI-Powered Charity Token Creator
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile Tokens Toggle */}
+            <button
+              onClick={() => setShowTokens(!showTokens)}
+              className="lg:hidden p-2 rounded-xl transition-colors relative hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              <svg className="w-6 h-6" style={{ color: 'var(--color-text-primary)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+              {mockTokens.length > 0 && (
+                <span className="absolute top-1 right-1 w-2 h-2 rounded-full" style={{ backgroundColor: 'var(--color-shield-blue)' }}></span>
+              )}
+            </button>
+          </div>
+        </header>
+
+        {/* Mobile Tokens Dropdown */}
+        {showTokens && (
+          <div className="lg:hidden p-4 space-y-3 max-h-80 overflow-y-auto animate-slide-up" style={{ backgroundColor: 'var(--color-surface)', borderBottom: `1px solid var(--color-border)` }}>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>Your Tokens</h3>
+              <button
+                onClick={() => setShowTokens(false)}
+                className="hover:opacity-70 transition-opacity"
+                style={{ color: 'var(--color-text-tertiary)' }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            {mockTokens.map((token) => (
+              <TokenCard key={token.id} token={token} />
+            ))}
+          </div>
+        )}
+
+        {/* Messages Container */}
+        <div className="flex-1 overflow-y-auto px-4 py-6 md:px-6 pb-4 mb-20 md:mb-0">
+          <div className="max-w-3xl mx-auto">
+            {/* Welcome Message */}
+            {messages.length === 0 && (
+              <div className="text-center py-12 animate-fade-in">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center text-white text-3xl" style={{ background: 'linear-gradient(135deg, var(--color-shield-blue-light) 0%, var(--color-shield-blue-dark) 100%)' }}>
+                  🛡️
+                </div>
+                <h2 className="text-2xl font-bold mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                  Welcome to Shield Token Bot
+                </h2>
+                <p className="max-w-md mx-auto" style={{ color: 'var(--color-text-secondary)' }}>
+                  I'll help you create charity tokens on the Base blockchain. Let's make a difference together!
+                </p>
+              </div>
+            )}
+
+            {/* Chat Messages */}
+            {messages.map((message) => (
+              <ChatMessage key={message.id} message={message} />
+            ))}
+
+            {/* Typing Indicator */}
+            {isTyping && (
+              <ChatMessage
+                message={{
+                  id: 'typing',
+                  role: 'agent',
+                  content: '',
+                  timestamp: new Date(),
+                  isTyping: true,
+                }}
+              />
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        {/* Chat Input - Fixed at bottom */}
+        <div className="px-4 md:px-6 pb-safe md:pb-4" style={{ backgroundColor: 'var(--color-surface)', borderTop: `1px solid var(--color-border)` }}>
+          <div className="max-w-3xl mx-auto">
+            <ChatInput onSend={handleSendMessage} disabled={isTyping} />
+          </div>
         </div>
       </main>
+
+      {/* Mobile Footer Navigation */}
+      <MobileFooter />
     </div>
   );
 }

@@ -34,7 +34,7 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
 
     return (
         <form onSubmit={handleSubmit} className="relative">
-            <div className="flex items-end gap-2 p-4 bg-surface border-t border-border md:rounded-2xl md:border md:shadow-lg">
+            <div className="flex items-end gap-2 p-4 rounded-2xl shadow-lg" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
                 <textarea
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -42,9 +42,9 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
                     placeholder="Type your message..."
                     disabled={disabled || isSending}
                     rows={1}
-                    className="flex-1 resize-none bg-transparent text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none max-h-32 min-h-[24px] py-1"
+                    className="flex-1 resize-none bg-transparent focus:outline-none max-h-32 min-h-[24px] py-1"
                     style={{
-                        height: 'auto',
+                        color: 'var(--color-text-primary)',
                         minHeight: '24px',
                     }}
                     onInput={(e) => {
@@ -57,8 +57,11 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
                 <button
                     type="submit"
                     disabled={!message.trim() || disabled || isSending}
-                    className="flex-shrink-0 w-10 h-10 rounded-full bg-shield-blue text-white flex items-center justify-center transition-all hover:bg-shield-blue-dark disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+                    className="flex-shrink-0 w-10 h-10 rounded-full text-white flex items-center justify-center transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ backgroundColor: 'var(--color-shield-blue)' }}
                     aria-label="Send message"
+                    onMouseOver={(e) => !message.trim() ? null : e.currentTarget.style.backgroundColor = 'var(--color-shield-blue-dark)'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--color-shield-blue)'}
                 >
                     {isSending ? (
                         <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -74,7 +77,7 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
             </div>
 
             {message.length > 0 && (
-                <div className="absolute -top-6 right-4 text-xs text-[var(--text-tertiary)]">
+                <div className="absolute -top-6 right-4 text-xs" style={{ color: 'var(--color-text-tertiary)' }}>
                     {message.length}/500
                 </div>
             )}

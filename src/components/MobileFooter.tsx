@@ -44,7 +44,7 @@ export default function MobileFooter() {
     ];
 
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface border-t border-border safe-area-inset-bottom">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40" style={{ backgroundColor: 'var(--color-surface)', borderTop: '1px solid var(--color-border)' }}>
             <div className="flex items-center justify-around px-4 py-3">
                 {navItems.map((item) => {
                     const active = isActive(item.path);
@@ -52,15 +52,16 @@ export default function MobileFooter() {
                         <Link
                             key={item.name}
                             href={item.path}
-                            className={`flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all ${active
-                                    ? 'text-shield-blue'
-                                    : 'text-[var(--text-tertiary)] hover:text-[var(--text-primary)]'
-                                }`}
+                            className="flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all relative"
+                            style={{ color: active ? 'var(--color-shield-blue)' : 'var(--color-text-tertiary)' }}
                         >
                             {item.icon(active)}
                             <span className="text-xs font-medium">{item.name}</span>
                             {active && (
-                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-shield-blue rounded-full"></div>
+                                <div className="absolute bottom-0 left-1/2 w-1 h-1 rounded-full" style={{
+                                    backgroundColor: 'var(--color-shield-blue)',
+                                    transform: 'translateX(-50%)'
+                                }}></div>
                             )}
                         </Link>
                     );
