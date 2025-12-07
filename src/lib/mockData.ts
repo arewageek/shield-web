@@ -23,19 +23,13 @@ export const mockChatMessages: ChatMessage[] = [
         id: '1',
         role: 'agent',
         content: 'Hello! I\'m the Shield Token Bot. I can help you create charity tokens on the Base blockchain. What cause would you like to support?',
-        timestamp: new Date(Date.now() - 3600000),
-    },
-    {
-        id: '2',
-        role: 'user',
-        content: 'I want to create a token for animal rescue',
-        timestamp: new Date(Date.now() - 3500000),
+        timestamp: new Date(Date.now()),
     },
     {
         id: '3',
         role: 'agent',
-        content: 'Great choice! Let\'s create a token for animal rescue. I\'ll need a few details:\n\n1. Token name (e.g., "Save Paws")\n2. Token symbol (e.g., "PAWS")\n3. Charity wallet address\n4. Transaction tax percentage (typically 3-5%)\n\nWhat would you like to name your token?',
-        timestamp: new Date(Date.now() - 3400000),
+        content: 'To get started, I\'ll need a few details:\n\n1. Token name (e.g., "Save Paws")\n2. Token symbol (e.g., "PAWS")\n3. Charity wallet address\n4. Transaction tax percentage (typically 3-5%)\n\nWhat would you like to name your token?',
+        timestamp: new Date(Date.now()),
     },
 ];
 

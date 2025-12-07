@@ -4,9 +4,10 @@ import { ChatMessage as ChatMessageType } from '@/types';
 
 interface ChatMessageProps {
     message: ChatMessageType;
+    index?: number;
 }
 
-export default function ChatMessage({ message }: ChatMessageProps) {
+export default function ChatMessage({ message, index = 0 }: ChatMessageProps) {
     const isUser = message.role === 'user';
 
     if (message.isTyping) {
@@ -29,13 +30,19 @@ export default function ChatMessage({ message }: ChatMessageProps) {
     }
 
     return (
-        <div className={`flex items-start gap-3 mb-4 animate-slide-up ${isUser ? 'flex-row-reverse' : ''}`}>
+        <div
+            className={`flex items-start gap-3 mb-4 animate-slide-up ${isUser ? 'flex-row-reverse' : ''}`}
+            style={{ animationDelay: `${index * 0.1}s`, animationFillMode: 'both' }}
+        >
             <div
                 className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium flex-shrink-0"
-                style={isUser
-                    ? { background: 'linear-gradient(135deg, var(--color-shield-blue-light) 0%, var(--color-shield-blue-dark) 100%)' }
-                    : { backgroundColor: 'var(--color-shield-blue)' }
-                }
+                style={{
+                    ...(isUser
+                        ? { background: 'linear-gradient(135deg, var(--color-shield-blue-light) 0%, var(--color-shield-blue-dark) 100%)' }
+                        : { backgroundColor: 'var(--color-shield-blue)' }
+                    ),
+                    animationDelay: `${index * 0.1}s`
+                }}
             >
                 {isUser ? 'You' : 'AI'}
             </div>

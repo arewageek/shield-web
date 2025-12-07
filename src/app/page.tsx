@@ -9,7 +9,7 @@ import { mockTokens, mockChatMessages } from '@/lib/mockData';
 import { ChatMessage as ChatMessageType } from '@/types';
 
 export default function Home() {
-  const [messages, setMessages] = useState<ChatMessageType[]>(mockChatMessages);
+  const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showTokens, setShowTokens] = useState(false);
@@ -23,6 +23,21 @@ export default function Home() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  useEffect(() => {
+    // Simulate initial AI typing
+    const timer = setTimeout(() => {
+      setIsTyping(true);
+
+      // Delay before showing messages
+      setTimeout(() => {
+        setMessages(mockChatMessages);
+        setIsTyping(false);
+      }, 1500);
+    }, 500); // Small delay before typing starts
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSendMessage = (content: string) => {
     // Add user message
@@ -169,8 +184,8 @@ export default function Home() {
             )}
 
             {/* Chat Messages */}
-            {messages.map((message) => (
-              <ChatMessage key={message.id} message={message} />
+            {messages.map((message, index) => (
+              <ChatMessage key={message.id} message={message} index={index} />
             ))}
 
             {/* Typing Indicator */}
