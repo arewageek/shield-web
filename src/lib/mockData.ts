@@ -16,21 +16,6 @@ export const mockTokens: Token[] = [
         charityAllocation: '50000',
         status: 'active',
     },
-    {
-        id: '2',
-        name: 'Clean Ocean Initiative',
-        symbol: 'OCEAN',
-        description: 'Fighting ocean pollution and protecting marine life',
-        owner: '0x4567...8901',
-        charityWallet: '0xbcde...f012',
-        marketingWallets: ['0x5678...9012'],
-        transactionTax: 3,
-        logoUrl: '🌊',
-        createdAt: new Date('2024-11-28'),
-        totalSupply: '500000',
-        charityAllocation: '25000',
-        status: 'active',
-    },
 ];
 
 export const mockChatMessages: ChatMessage[] = [
