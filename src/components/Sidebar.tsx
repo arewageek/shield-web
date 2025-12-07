@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export default function MobileFooter() {
+export default function Sidebar() {
     const pathname = usePathname();
 
     const isActive = (path: string) => {
@@ -44,29 +44,40 @@ export default function MobileFooter() {
     ];
 
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40" style={{ backgroundColor: 'var(--color-surface)', borderTop: '1px solid var(--color-border)' }}>
-            <div className="flex items-center justify-around px-4 py-3">
+        <aside className="hidden md:flex flex-col w-64 h-screen sticky top-0" style={{ backgroundColor: 'var(--color-surface)', borderRight: '1px solid var(--color-border)' }}>
+            {/* Header */}
+            <div className="p-6 flex items-center gap-3" style={{ borderBottom: '1px solid var(--color-border)' }}>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ background: 'linear-gradient(135deg, var(--color-shield-blue-light) 0%, var(--color-shield-blue-dark) 100%)' }}>
+                    S
+                </div>
+                <span className="font-semibold text-lg" style={{ color: 'var(--color-text-primary)' }}>Shield</span>
+            </div>
+
+            {/* Navigation Items */}
+            <nav className="flex-1 px-4 py-6 space-y-2">
                 {navItems.map((item) => {
                     const active = isActive(item.path);
                     return (
                         <Link
                             key={item.name}
                             href={item.path}
-                            className="flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all relative"
-                            style={{ color: active ? 'var(--color-shield-blue)' : 'var(--color-text-tertiary)' }}
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${active ? 'bg-blue-50 dark:bg-blue-900/20' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
+                                }`}
+                            style={{ color: active ? 'var(--color-shield-blue)' : 'var(--color-text-secondary)' }}
                         >
                             {item.icon(active)}
-                            <span className="text-xs font-medium">{item.name}</span>
-                            {active && (
-                                <div className="absolute bottom-0 left-1/2 w-1 h-1 rounded-full" style={{
-                                    backgroundColor: 'var(--color-shield-blue)',
-                                    transform: 'translateX(-50%)'
-                                }}></div>
-                            )}
+                            <span className={`font-medium ${active ? 'font-semibold' : ''}`}>{item.name}</span>
                         </Link>
                     );
                 })}
+            </nav>
+
+            {/* Footer Info */}
+            <div className="p-6" style={{ borderTop: '1px solid var(--color-border)' }}>
+                <p className="text-xs text-center" style={{ color: 'var(--color-text-tertiary)' }}>
+                    © 2024 Shield Token Bot
+                </p>
             </div>
-        </nav>
+        </aside>
     );
 }

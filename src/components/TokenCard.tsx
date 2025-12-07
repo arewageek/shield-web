@@ -55,7 +55,7 @@ export default function TokenCard({ token }: TokenCardProps) {
 
                     <div className="rounded-xl p-3" style={{ backgroundColor: 'var(--color-background)' }}>
                         <div className="text-xs mb-1" style={{ color: 'var(--color-text-tertiary)' }}>Charity Fund</div>
-                        <div className="font-semibold" style={{ color: 'var(--color-success)' }}>{token.charityAllocation}</div>
+                        <div className="font-semibold" style={{ color: 'var(--color-success)' }}>{Number(token.charityAllocation).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
                     </div>
                 </div>
 

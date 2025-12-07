@@ -4,10 +4,11 @@ import { useState } from 'react';
 
 interface ChatInputProps {
     onSend: (message: string) => void;
+    onInputChange?: (text: string) => void;
     disabled?: boolean;
 }
 
-export default function ChatInput({ onSend, disabled = false }: ChatInputProps) {
+export default function ChatInput({ onSend, onInputChange, disabled = false }: ChatInputProps) {
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);
 
@@ -37,7 +38,10 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
             <div className="flex items-end gap-2 p-4 rounded-2xl shadow-lg" style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
                 <textarea
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => {
+                        setMessage(e.target.value);
+                        onInputChange?.(e.target.value);
+                    }}
                     onKeyDown={handleKeyDown}
                     placeholder="Type your message..."
                     disabled={disabled || isSending}
@@ -53,6 +57,7 @@ export default function ChatInput({ onSend, disabled = false }: ChatInputProps) 
                         target.style.height = Math.min(target.scrollHeight, 128) + 'px';
                     }}
                 />
+
 
                 <button
                     type="submit"
