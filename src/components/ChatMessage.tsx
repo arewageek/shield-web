@@ -1,6 +1,8 @@
 'use client';
 
 import { ChatMessage as ChatMessageType } from '@/types';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatMessageProps {
     message: ChatMessageType;
@@ -55,10 +57,107 @@ export default function ChatMessage({ message, index = 0 }: ChatMessageProps) {
                         : { backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }
                     }
                 >
-                    <div
-                        className="text-sm leading-relaxed"
-                        dangerouslySetInnerHTML={{ __html: message.content }}
-                    />
+                    {isUser ? (
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                            {message.content}
+                        </p>
+                    ) : (
+                        <div className="text-sm leading-relaxed markdown-content">
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    // Headings
+                                    h1: ({ children }) => <h1 className="text-xl font-bold mt-4 mb-2">{children}</h1>,
+                                    h2: ({ children }) => <h2 className="text-lg font-semibold mt-3 mb-2">{children}</h2>,
+                                    h3: ({ children }) => <h3 className="text-base font-semibold mt-2 mb-1">{children}</h3>,
+
+                                    // Paragraphs
+                                    p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+
+                                    // Lists
+                                    ul: ({ children }) => <ul className="list-disc list-inside mb-2 space-y-1">{children}</ul>,
+                                    ol: ({ children }) => <ol className="list-decimal list-inside mb-2 space-y-1">{children}</ol>,
+                                    li: ({ children }) => <li className="ml-2">{children}</li>,
+
+                                    // Code blocks
+                                    code: ({ inline, className, children, ...props }: any) => {
+                                        if (inline) {
+                                            return (
+                                                <code
+                                                    className="px-1.5 py-0.5 rounded text-xs font-mono"
+                                                    style={{
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                                                        color: 'var(--color-text-primary)'
+                                                    }}
+                                                    {...props}
+                                                >
+                                                    {children}
+                                                </code>
+                                            );
+                                        }
+                                        return (
+                                            <pre className="my-2 p-3 rounded-lg overflow-x-auto" style={{ backgroundColor: 'rgba(0, 0, 0, 0.1)' }}>
+                                                <code className="text-xs font-mono" {...props}>
+                                                    {children}
+                                                </code>
+                                            </pre>
+                                        );
+                                    },
+
+                                    // Links
+                                    a: ({ children, href }) => (
+                                        <a
+                                            href={href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="underline hover:opacity-80 transition-opacity"
+                                            style={{ color: 'var(--color-shield-blue-light)' }}
+                                        >
+                                            {children}
+                                        </a>
+                                    ),
+
+                                    // Strong/Bold
+                                    strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+
+                                    // Emphasis/Italic
+                                    em: ({ children }) => <em className="italic">{children}</em>,
+
+                                    // Blockquote
+                                    blockquote: ({ children }) => (
+                                        <blockquote
+                                            className="border-l-4 pl-3 my-2 italic"
+                                            style={{ borderColor: 'var(--color-shield-blue)' }}
+                                        >
+                                            {children}
+                                        </blockquote>
+                                    ),
+
+                                    // Horizontal rule
+                                    hr: () => <hr className="my-3 opacity-20" />,
+
+                                    // Tables
+                                    table: ({ children }) => (
+                                        <div className="overflow-x-auto my-2">
+                                            <table className="min-w-full border-collapse">{children}</table>
+                                        </div>
+                                    ),
+                                    th: ({ children }) => (
+                                        <th className="border px-2 py-1 text-left font-semibold text-xs" style={{ borderColor: 'var(--color-border)' }}>
+                                            {children}
+                                        </th>
+                                    ),
+                                    td: ({ children }) => (
+                                        <td className="border px-2 py-1 text-xs" style={{ borderColor: 'var(--color-border)' }}>
+                                            {children}
+                                        </td>
+                                    ),
+                                }}
+                            >
+                                {message.content}
+                            </ReactMarkdown>
+                        </div>
+                    )}
 
                     {message.tokenData && (
                         <div className="mt-3 p-3 rounded-xl" style={{
