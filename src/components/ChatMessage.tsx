@@ -55,9 +55,10 @@ export default function ChatMessage({ message, index = 0 }: ChatMessageProps) {
                         : { backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)', color: 'var(--color-text-primary)' }
                     }
                 >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                        {message.content}
-                    </p>
+                    <div
+                        className="text-sm leading-relaxed"
+                        dangerouslySetInnerHTML={{ __html: message.content }}
+                    />
 
                     {message.tokenData && (
                         <div className="mt-3 p-3 rounded-xl" style={{
