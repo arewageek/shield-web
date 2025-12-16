@@ -6,14 +6,22 @@ interface ChatMessagesAreaProps {
     messages: ChatMessageType[];
     isTyping: boolean;
     messagesEndRef: RefObject<HTMLDivElement | null>;
+    error?: string;
 }
 
-export default function ChatMessagesArea({ messages, isTyping, messagesEndRef }: ChatMessagesAreaProps) {
+export default function ChatMessagesArea({ messages, isTyping, messagesEndRef, error }: ChatMessagesAreaProps) {
     return (
         <div className="flex-1 overflow-y-auto px-4 py-6 md:px-6 pb-4">
             <div className="max-w-3xl mx-auto">
+                {/* Error Message */}
+                {error && (
+                    <div className="mb-4 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 animate-fade-in">
+                        <p className="text-sm">{error}</p>
+                    </div>
+                )}
+
                 {/* Welcome Message */}
-                {messages.length === 0 && (
+                {messages.length === 0 && !error && (
                     <div className="text-center py-12 animate-fade-in">
                         <div
                             className="w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center text-white text-3xl"
