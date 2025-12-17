@@ -4,11 +4,10 @@ import { getUserId } from "./chat";
 export const getConversationId = async () => {
     let conversationId = localStorage.getItem("conversationId");
     if (!conversationId) {
-        const newId = await createConversation()
-        conversationId = newId.data.id;
-        localStorage.setItem("conversationId", conversationId as string);
+        const conversation = await createConversation()
+        localStorage.setItem("conversationId", conversation.data._id);
     }
-    return conversationId as string;
+    return localStorage.getItem("conversationId");
 }
 
 export const createConversation = async () => {
@@ -29,8 +28,10 @@ export const createConversation = async () => {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || errorData.error || "Failed to create conversation");
     }
-
     const data = await response.json();
+
+    console.log({ data })
+
     return data;
 }
 

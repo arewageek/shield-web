@@ -1,4 +1,4 @@
-import { createConversation } from "./conversation";
+import { createConversation, getConversationId } from "./conversation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4444";
 
@@ -19,9 +19,9 @@ export const sendMessage = async (prompt: string) => {
         if (!prompt) return;
 
         const user = getUserId();
-        const conversationId = localStorage.getItem("conversationId");
+        const conversationId = await getConversationId()
 
-        console.log({ user, prompt })
+        console.log({ user, prompt, conversationId })
 
         const response = await fetch(`${API_URL}/chat/${conversationId}/message`, {
             headers: {

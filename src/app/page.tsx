@@ -37,7 +37,7 @@ export default function Home() {
         const response = await conversation();
 
         if (response?.data) {
-          setMessages(mapApiMessages(response.data));
+          setMessages(mapApiMessages(response.data.messages));
           return;
         }
 
