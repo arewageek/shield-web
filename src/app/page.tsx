@@ -8,9 +8,10 @@ import MobileHeader from '@/components/MobileHeader';
 import MobileTokensDropdown from '@/components/MobileTokensDropdown';
 import ChatMessagesArea from '@/components/ChatMessagesArea';
 import ChatInputArea from '@/components/ChatInputArea';
-import { sendMessage, getMessages } from '@/services/chat';
+import { sendMessage } from '@/services/chat';
 import { createMessage, mapApiMessages } from '@/utils/chat';
 import { mockTokens } from '@/lib/mockData';
+import { conversation } from '@/services/conversation';
 
 export default function Home() {
   const [messages, setMessages] = useState<any[]>([]);
@@ -33,7 +34,7 @@ export default function Home() {
       setIsTyping(true);
 
       try {
-        const response = await getMessages();
+        const response = await conversation();
 
         if (response?.data) {
           setMessages(mapApiMessages(response.data));
@@ -101,6 +102,7 @@ export default function Home() {
           messages={messages}
           isTyping={isTyping}
           messagesEndRef={messagesEndRef}
+          error={error}
         />
 
         <ChatInputArea

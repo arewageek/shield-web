@@ -1,3 +1,4 @@
+import { createConversation } from "./conversation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4444";
 
@@ -18,10 +19,11 @@ export const sendMessage = async (prompt: string) => {
         if (!prompt) return;
 
         const user = getUserId();
+        const conversationId = localStorage.getItem("conversationId");
 
         console.log({ user, prompt })
 
-        const response = await fetch(`${API_URL}/chat/message`, {
+        const response = await fetch(`${API_URL}/chat/${conversationId}/message`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer demo`
@@ -34,7 +36,8 @@ export const sendMessage = async (prompt: string) => {
         })
 
         if (!response.ok) {
-            throw new Error("Failed to send message");
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || errorData.error || "Failed to send message");
         }
 
         const data = await response.json();
@@ -43,28 +46,6 @@ export const sendMessage = async (prompt: string) => {
     }
     catch (error: any) {
         console.log({ error: error.message })
-        return { error: error.message }
-    }
-}
-
-export const getMessages = async () => {
-    try {
-        const user = getUserId();
-        const response = await fetch(`${API_URL}/chat/history/${user}`, {
-            headers: {
-                "Authorization": `Bearer demo`
-            }
-        })
-
-        if (!response.ok) throw new Error("Failed to fetch messages");
-
-        const data = await response.json();
-        return data;
-    }
-    catch (error: any) {
-        console.error({
-            error: error.message
-        })
         return { error: error.message }
     }
 }
