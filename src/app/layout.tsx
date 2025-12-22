@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Shield Token Bot - Create Charity Tokens on Base",
   description: "Create and manage charity tokens on the Base blockchain with Shield Token Bot",
+  other: {
+    'base:app_id': '69498efcc63ad876c9080f30',
+  },
 };
 
 export default function RootLayout({
