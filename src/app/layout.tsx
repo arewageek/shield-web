@@ -18,6 +18,20 @@ export const metadata: Metadata = {
   description: "Create and manage charity tokens on the Base blockchain with Shield Token Bot",
   other: {
     'base:app_id': '69498efcc63ad876c9080f30',
+    'fc:miniapp': JSON.stringify({
+        version: 'next',
+        imageUrl: 'https://shield-token-bot.vercel.app/favicon.png',
+        button: {
+            title: `Shield Token Bot`,
+            action: {
+                type: 'launch_miniapp',
+                name: 'Shield Token Bot',
+                url: 'https://shield-token-bot.vercel.app',
+                splashImageUrl: 'https://shield-token-bot.vercel.app/favicon.png',
+                splashBackgroundColor: '#5A7ACD',
+            },
+        },
+    }),
   },
 };
 

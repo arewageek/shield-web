@@ -1,10 +1,11 @@
 'use client';
 
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Sidebar from './Sidebar';
 import Sidenav from './Sidenav';
 import { UIProvider, useUI } from '@/context/UIContext';
+import sdk from '@farcaster/miniapp-sdk';
 
 function AppShellContent({ children }: { children: ReactNode }) {
     const { isSidenavOpen, closeSidenav, openSidenav } = useUI();
@@ -62,6 +63,10 @@ function AppShellContent({ children }: { children: ReactNode }) {
 }
 
 export default function AppShell({ children }: { children: ReactNode }) {
+    useEffect(() => {
+        sdk.actions.ready();
+    }, []);
+    
     return (
         <UIProvider>
             <AppShellContent>{children}</AppShellContent>
